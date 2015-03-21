@@ -45,7 +45,9 @@ enum Category {
     }
 
     private static Predicate<List<Dice>> anotherDieOccursAtLeastYTimes(int times) {
-        return dice -> dice.stream().filter(die -> dice.stream().filter(d -> d == die).count() < 3).anyMatch(die -> dice.stream().filter(d -> d == die).count() >= times);
+        // FIXME Magic number! Very specific implementation! Should be implemented in another way (but I liked the and-syntax in the reule definition).
+        return dice -> dice.stream().filter(die -> dice.stream().filter(d -> d == die).count() < 3)
+                .anyMatch(die -> dice.stream().filter(d -> d == die).count() >= times);
     }
 
     private static Predicate<List<Dice>> atLeastOneDieOccursAtLeastXTimes(int times) {
@@ -53,16 +55,19 @@ enum Category {
     }
 
     private static Predicate<List<Dice>> dicesInARow(int numberOfDice) {
-        Set<Set<Dice>> possibleStraights = possibleStraights(numberOfDice);
-        return dice -> possibleStraights.stream().anyMatch(
+        return dice -> possibleStraights(numberOfDice).stream().anyMatch(
                 possibleStraight -> possibleStraight.stream().allMatch(straightDie -> dice.contains(straightDie)));
     }
 
     private static Set<Set<Dice>> possibleStraights(int numberOfDice) {
-        return IntStream.range(0, Dice.values().length - numberOfDice).mapToObj(startDice ->
-                IntStream.range(startDice, startDice+numberOfDice)
-                        .mapToObj(die -> Dice.values()[die]).collect(Collectors.toSet())
-        ).collect(Collectors.toSet());
+        return IntStream.range(0, Dice.values().length - numberOfDice)
+                .mapToObj(startDice -> createStraightStartingAt(startDice, numberOfDice))
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<Dice> createStraightStartingAt(int startDice, int numberOfDice) {
+        return IntStream.range(startDice, startDice + numberOfDice)
+                .mapToObj(die -> Dice.values()[die]).collect(Collectors.toSet());
     }
 
     private static Predicate<List<Dice>> matchesForEveryDice() {
