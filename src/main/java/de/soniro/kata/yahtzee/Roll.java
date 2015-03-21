@@ -2,6 +2,7 @@ package de.soniro.kata.yahtzee;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,7 +18,7 @@ public class Roll {
         return new Roll(first, second, third, fourth, fifth);
     }
 
-    public List<Category> possibleCategories() {
-        return Stream.of(Category.values()).filter(category -> category.isPossibleCategoryFor(dice)).collect(Collectors.toList());
+    public Set<Category> possibleCategories() {
+        return Stream.of(Category.values()).filter(category -> category.isPossibleCategoryFor(dice)).collect(Collectors.toSet());
     }
 }

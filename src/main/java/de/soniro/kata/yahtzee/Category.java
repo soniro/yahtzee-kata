@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 
 import static de.soniro.kata.yahtzee.Dice.*;
 
-public enum Category {
+enum Category {
     ONES(hasAtLeastOne(ONE)),
     TWOS(hasAtLeastOne(TWO)),
     THREES(hasAtLeastOne(THREE)),
